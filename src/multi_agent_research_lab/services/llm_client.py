@@ -22,29 +22,34 @@ class LLMResponse:
 class LLMClient:
     """Provider-agnostic LLM client with graceful local fallback."""
 
+    OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
     def __init__(self, settings: Settings | None = None) -> None:
         self.settings = settings or get_settings()
 
     def complete(self, system_prompt: str, user_prompt: str) -> LLMResponse:
         """Return a model completion."""
 
-        if self.settings.openai_api_key:
+        if self._has_remote_provider():
             try:
-                return self._complete_openai(system_prompt, user_prompt)
+                return self._complete_remote(system_prompt, user_prompt)
             except Exception:
                 pass
         return self._complete_locally(system_prompt, user_prompt)
 
+    def _has_remote_provider(self) -> bool:
+        return bool(self.settings.openai_api_key or self.settings.openrouter_api_key)
+
     @retry(stop=stop_after_attempt(2), wait=wait_fixed(1), reraise=True)
-    def _complete_openai(self, system_prompt: str, user_prompt: str) -> LLMResponse:
+    def _complete_remote(self, system_prompt: str, user_prompt: str) -> LLMResponse:
         try:
             from openai import OpenAI
         except ImportError as exc:  # pragma: no cover - optional dependency
             raise RuntimeError("openai package is not installed") from exc
 
-        client = OpenAI(api_key=self.settings.openai_api_key, timeout=self.settings.timeout_seconds)
+        client = OpenAI(**self._build_client_kwargs(), timeout=self.settings.timeout_seconds)
         response = client.responses.create(
-            model=self.settings.openai_model,
+            model=self._get_model_name(),
             input=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -60,6 +65,20 @@ class LLMClient:
             output_tokens=output_tokens,
             cost_usd=self._estimate_cost(input_tokens, output_tokens),
         )
+
+    def _build_client_kwargs(self) -> dict[str, Any]:
+        if self.settings.openrouter_api_key:
+            return {
+                "api_key": self.settings.openrouter_api_key,
+                "base_url": self.OPENROUTER_BASE_URL,
+            }
+
+        return {"api_key": self.settings.openai_api_key}
+
+    def _get_model_name(self) -> str:
+        if self.settings.openrouter_api_key and self.settings.openrouter_model:
+            return self.settings.openrouter_model
+        return self.settings.openai_model
 
     def _complete_locally(self, system_prompt: str, user_prompt: str) -> LLMResponse:
         content = self._render_fallback_content(system_prompt, user_prompt)

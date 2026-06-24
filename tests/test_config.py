@@ -5,3 +5,5 @@ def test_settings_defaults() -> None:
     settings = Settings()
     assert settings.openai_model
     assert settings.max_iterations >= 1
+    assert settings.openrouter_api_key in (None, "")
+    assert settings.openrouter_model in (None, "")
