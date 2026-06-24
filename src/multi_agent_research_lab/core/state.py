@@ -3,7 +3,7 @@
 Students should extend this file when adding new agents, outputs, or evaluation metrics.
 """
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -21,6 +21,8 @@ class ResearchState(BaseModel):
     research_notes: str | None = None
     analysis_notes: str | None = None
     final_answer: str | None = None
+    critic_notes: str | None = None
+    review_status: Literal["pending", "passed", "failed"] = "pending"
 
     agent_results: list[AgentResult] = Field(default_factory=list)
     trace: list[dict[str, Any]] = Field(default_factory=list)

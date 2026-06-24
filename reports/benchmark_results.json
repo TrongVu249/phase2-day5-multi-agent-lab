@@ -1,0 +1,79 @@
+{
+  "generated_on": "2026-06-24",
+  "query_count": 3,
+  "aggregate": {
+    "baseline": {
+      "average_latency_seconds": 9.26,
+      "average_cost_usd": 0.0002,
+      "quality_score": 8.0,
+      "citation_coverage": 0.0,
+      "failure_rate": 0.0
+    },
+    "multi_agent": {
+      "average_latency_seconds": 21.85,
+      "average_cost_usd": 0.0013,
+      "quality_score": 8.0,
+      "citation_coverage": 1.0,
+      "failure_rate": 0.0
+    }
+  },
+  "queries": [
+    {
+      "query": "Research GraphRAG state-of-the-art and write a 500-word summary",
+      "baseline": {
+        "latency_seconds": 18.83,
+        "estimated_cost_usd": 0.0004,
+        "quality_score": 8.0,
+        "citation_coverage": 0.0,
+        "failure_rate": 0.0
+      },
+      "multi_agent": {
+        "latency_seconds": 25.95,
+        "estimated_cost_usd": 0.0014,
+        "quality_score": 8.0,
+        "citation_coverage": 1.0,
+        "failure_rate": 0.0,
+        "route_history": ["researcher", "analyst", "writer", "critic", "done"],
+        "review_status": "passed"
+      }
+    },
+    {
+      "query": "Compare single-agent and multi-agent workflows for customer support",
+      "baseline": {
+        "latency_seconds": 3.60,
+        "estimated_cost_usd": 0.0001,
+        "quality_score": 8.0,
+        "citation_coverage": 0.0,
+        "failure_rate": 0.0
+      },
+      "multi_agent": {
+        "latency_seconds": 15.11,
+        "estimated_cost_usd": 0.0011,
+        "quality_score": 8.0,
+        "citation_coverage": 1.0,
+        "failure_rate": 0.0,
+        "route_history": ["researcher", "analyst", "writer", "critic", "done"],
+        "review_status": "passed"
+      }
+    },
+    {
+      "query": "Summarize production guardrails for LLM agents",
+      "baseline": {
+        "latency_seconds": 5.34,
+        "estimated_cost_usd": 0.0002,
+        "quality_score": 8.0,
+        "citation_coverage": 0.0,
+        "failure_rate": 0.0
+      },
+      "multi_agent": {
+        "latency_seconds": 24.47,
+        "estimated_cost_usd": 0.0013,
+        "quality_score": 8.0,
+        "citation_coverage": 1.0,
+        "failure_rate": 0.0,
+        "route_history": ["researcher", "analyst", "writer", "critic", "done"],
+        "review_status": "passed"
+      }
+    }
+  ]
+}

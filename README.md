@@ -90,6 +90,12 @@ make test
 python -m multi_agent_research_lab.cli --help
 ```
 
+Neu ban chua cai editable package, co the dung fallback:
+
+```bash
+PYTHONPATH=src python -m multi_agent_research_lab.cli --help
+```
+
 ### 4. Chạy baseline skeleton
 
 ```bash

@@ -94,20 +94,20 @@ class LLMClient:
     def _render_fallback_content(self, system_prompt: str, user_prompt: str) -> str:
         prompt = user_prompt.strip()
         lowered_system = system_prompt.lower()
-        if "analysis" in lowered_system:
+        if "analyst agent" in lowered_system or "analysis" in lowered_system:
             return (
-                "Analysis:\n"
-                "- Primary claim: the topic benefits from decomposition into explicit steps.\n"
-                "- Supporting evidence: multiple references emphasize process, quality, and guardrails.\n"
-                "- Weakness: some evidence may come from vendor-authored sources.\n"
-                "- Recommendation: keep citations and mention uncertainty."
+                "Key claim: the topic benefits from decomposition into explicit steps.\n"
+                "Evidence summary: multiple references emphasize process, quality, and guardrails.\n"
+                "Risk / uncertainty: some evidence may come from vendor-authored or high-level sources.\n"
+                "Recommendation: keep citations visible and mention uncertainty."
             )
-        if "writer" in lowered_system or "final answer" in lowered_system:
+        if "writer agent" in lowered_system or "final answer" in lowered_system:
             return (
                 f"Summary for '{prompt}':\n"
                 "Use a structured workflow that gathers evidence, analyzes tradeoffs, and then writes a"
-                " concise response. Include source references, note uncertainty, and stop once the core"
-                " question has been answered."
+                " concise response. Note uncertainty when evidence is weak.\n\n"
+                "Limitations: source quality may vary and some claims may require deeper validation.\n\n"
+                "References: local workflow evidence"
             )
         if "research" in lowered_system:
             return (

@@ -2,7 +2,7 @@
 
 import logging
 
-from multi_agent_research_lab.agents import AnalystAgent, ResearcherAgent, SupervisorAgent, WriterAgent
+from multi_agent_research_lab.agents import AnalystAgent, CriticAgent, ResearcherAgent, SupervisorAgent, WriterAgent
 from multi_agent_research_lab.agents.base import BaseAgent
 from multi_agent_research_lab.core.config import Settings, get_settings
 from multi_agent_research_lab.core.errors import AgentExecutionError, ValidationError
@@ -26,6 +26,7 @@ class MultiAgentWorkflow:
             "researcher": ResearcherAgent(),
             "analyst": AnalystAgent(),
             "writer": WriterAgent(),
+            "critic": CriticAgent(),
         }
 
     def run(self, state: ResearchState) -> ResearchState:

@@ -29,6 +29,8 @@ class SupervisorAgent(BaseAgent):
             next_route = "analyst"
         elif not state.final_answer:
             next_route = "writer"
+        elif state.review_status == "pending":
+            next_route = "critic"
         else:
             next_route = "done"
         logger.info("Supervisor selected next route: %s", next_route)

@@ -64,7 +64,7 @@ def multi_agent(
     state = ResearchState(request=ResearchQuery(query=query))
     workflow = MultiAgentWorkflow()
     result = workflow.run(state)
-    console.print(result.model_dump_json(indent=2))
+    console.print(result.model_dump_json(indent=2, ensure_ascii=True))
 
 
 if __name__ == "__main__":

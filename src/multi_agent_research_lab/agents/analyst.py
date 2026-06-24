@@ -6,6 +6,7 @@ from multi_agent_research_lab.agents.base import BaseAgent
 from multi_agent_research_lab.core.schemas import AgentName, AgentResult
 from multi_agent_research_lab.core.state import ResearchState
 from multi_agent_research_lab.observability.tracing import trace_span
+from multi_agent_research_lab.services.llm_client import LLMClient
 
 logger = logging.getLogger(__name__)
 
@@ -15,24 +16,42 @@ class AnalystAgent(BaseAgent):
 
     name = "analyst"
 
+    def __init__(self, llm_client: LLMClient | None = None) -> None:
+        self.llm_client = llm_client or LLMClient()
+
     def run(self, state: ResearchState) -> ResearchState:
         """Populate `state.analysis_notes`."""
 
         logger.info("Analyst started")
         note_lines = [source.snippet for source in state.sources] or [state.research_notes or ""]
+        user_prompt = (
+            f"Query: {state.request.query}\n"
+            f"Research notes:\n{state.research_notes or 'No research notes available.'}\n\n"
+            "Source snippets:\n"
+            + "\n".join(f"- {line}" for line in note_lines[:3])
+            + "\n\nWrite an analysis with these sections:\n"
+            "- Key claim\n- Evidence summary\n- Risk / uncertainty\n- Recommendation"
+        )
         with trace_span("analyst.run", {"sources": len(state.sources)}) as span:
-            state.analysis_notes = (
-                "Analysis:\n"
-                f"- Key claim: {state.request.query} benefits from a staged workflow.\n"
-                f"- Evidence summary: {' '.join(note_lines[:2])}\n"
-                "- Risk: some sources may be vendor-authored or high-level.\n"
-                "- Recommendation: preserve citations and call out uncertainty."
+            response = self.llm_client.complete(
+                system_prompt=(
+                    "You are the Analyst agent in a multi-agent research workflow. Produce concise,"
+                    " evidence-aware analysis for technical learners. Always include the sections:"
+                    " Key claim, Evidence summary, Risk / uncertainty, Recommendation."
+                ),
+                user_prompt=user_prompt,
             )
+            state.analysis_notes = response.content
             state.agent_results.append(
                 AgentResult(
                     agent=AgentName.ANALYST,
                     content=state.analysis_notes,
-                    metadata={"used_source_count": len(state.sources)},
+                    metadata={
+                        "used_source_count": len(state.sources),
+                        "input_tokens": response.input_tokens,
+                        "output_tokens": response.output_tokens,
+                        "cost_usd": response.cost_usd,
+                    },
                 )
             )
             span["analysis_ready"] = True

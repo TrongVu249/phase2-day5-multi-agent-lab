@@ -1,0 +1,96 @@
+{
+  "query": "Research GraphRAG state-of-the-art and write a 500-word summary",
+  "route_history": ["researcher", "analyst", "writer", "critic", "done"],
+  "review_status": "passed",
+  "critic_notes": "Critic review passed: final answer includes references and is ready to share.",
+  "top_sources": [
+    "Retrieval-Augmented Generation with Graphs (GraphRAG) - arXiv",
+    "GraphRAG Explained: Enhancing RAG with Knowledge ...",
+    "LazyGraphRAG: Setting a new standard for quality and cost - Microsoft"
+  ],
+  "trace": [
+    {
+      "name": "supervisor.route",
+      "payload": {
+        "next": "researcher",
+        "iteration": 1
+      }
+    },
+    {
+      "name": "researcher.completed",
+      "payload": {
+        "source_count": 5,
+        "span": {
+          "name": "researcher.run",
+          "attributes": {
+            "query": "Research GraphRAG state-of-the-art and write a 500-word summary"
+          },
+          "duration_seconds": 2.870730900000126,
+          "source_count": 5
+        }
+      }
+    },
+    {
+      "name": "supervisor.route",
+      "payload": {
+        "next": "analyst",
+        "iteration": 2
+      }
+    },
+    {
+      "name": "analyst.completed",
+      "payload": {
+        "span": {
+          "name": "analyst.run",
+          "attributes": {
+            "sources": 5
+          },
+          "duration_seconds": 5.528215799999998,
+          "analysis_ready": true
+        }
+      }
+    },
+    {
+      "name": "supervisor.route",
+      "payload": {
+        "next": "writer",
+        "iteration": 3
+      }
+    },
+    {
+      "name": "writer.completed",
+      "payload": {
+        "span": {
+          "name": "writer.run",
+          "attributes": {
+            "citations": "Retrieval-Augmented Generation with Graphs (GraphRAG) - arXiv, GraphRAG Explained: Enhancing RAG with Knowledge ..., LazyGraphRAG: Setting a new standard for quality and cost - Microsoft"
+          },
+          "duration_seconds": 17.550250600000254,
+          "final_answer_ready": true
+        }
+      }
+    },
+    {
+      "name": "supervisor.route",
+      "payload": {
+        "next": "critic",
+        "iteration": 4
+      }
+    },
+    {
+      "name": "critic.completed",
+      "payload": {
+        "review_status": "passed",
+        "critic_notes": "Critic review passed: final answer includes references and is ready to share.",
+        "errors": []
+      }
+    },
+    {
+      "name": "supervisor.route",
+      "payload": {
+        "next": "done",
+        "iteration": 5
+      }
+    }
+  ]
+}
