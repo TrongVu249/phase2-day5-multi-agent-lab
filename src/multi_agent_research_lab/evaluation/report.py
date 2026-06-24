@@ -4,14 +4,35 @@ from multi_agent_research_lab.core.schemas import BenchmarkMetrics
 
 
 def render_markdown_report(metrics: list[BenchmarkMetrics]) -> str:
-    """Render benchmark metrics to markdown.
+    """Render benchmark metrics to markdown."""
 
-    TODO(student): Add richer analysis, examples, screenshots, and trace links.
-    """
-
-    lines = ["# Benchmark Report", "", "| Run | Latency (s) | Cost (USD) | Quality | Notes |", "|---|---:|---:|---:|---|"]
+    lines = [
+        "# Benchmark Report",
+        "",
+        "| Run | Latency (s) | Cost (USD) | Quality | Citation Coverage | Failure Rate | Notes |",
+        "|---|---:|---:|---:|---:|---:|---|",
+    ]
     for item in metrics:
         cost = "" if item.estimated_cost_usd is None else f"{item.estimated_cost_usd:.4f}"
         quality = "" if item.quality_score is None else f"{item.quality_score:.1f}"
-        lines.append(f"| {item.run_name} | {item.latency_seconds:.2f} | {cost} | {quality} | {item.notes} |")
+        coverage = "" if item.citation_coverage is None else f"{item.citation_coverage:.0%}"
+        failure_rate = "" if item.failure_rate is None else f"{item.failure_rate:.0%}"
+        lines.append(
+            f"| {item.run_name} | {item.latency_seconds:.2f} | {cost} | {quality} | {coverage} | {failure_rate} | {item.notes} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Quality Notes",
+            "",
+            "- Compare baseline and multi-agent outputs side by side for clarity, citation use, and completeness.",
+            "- Add screenshots or trace links here after running the workflow in your own environment.",
+            "",
+            "## Failure Modes And Fixes",
+            "",
+            "- Missing or weak sources: add a better search provider or tighten source filtering.",
+            "- High latency: reduce iterations, shrink prompts, or skip analysis for simple queries.",
+            "- Incomplete answers: improve supervisor stop logic and writer validation.",
+        ]
+    )
     return "\n".join(lines) + "\n"

@@ -74,11 +74,26 @@ LANGSMITH_API_KEY=...
 TAVILY_API_KEY=...
 ```
 
+Nếu dùng OpenRouter, cấu hình tối thiểu là:
+
+```bash
+OPENROUTER_API_KEY=...
+OPENROUTER_MODEL=openai/gpt-4o-mini
+```
+
+Khi có `OPENROUTER_API_KEY`, repo sẽ gọi qua OpenRouter. Nếu có `OPENROUTER_MODEL` thì hệ thống dùng model đó; nếu không, nó sẽ fallback sang `OPENAI_MODEL` để giữ tương thích với cấu hình cũ.
+
 ### 3. Chạy smoke test
 
 ```bash
 make test
 python -m multi_agent_research_lab.cli --help
+```
+
+Neu ban chua cai editable package, co the dung fallback:
+
+```bash
+PYTHONPATH=src python -m multi_agent_research_lab.cli --help
 ```
 
 ### 4. Chạy baseline skeleton

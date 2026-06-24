@@ -11,3 +11,7 @@ build/
 reports/*.json
 reports/*.md
 !.gitkeep
+!reports/benchmark_report.md
+!reports/benchmark_results.json
+!reports/multi_agent_trace_example.json
+!reports/trace_screenshot.png
